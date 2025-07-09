@@ -1,0 +1,12 @@
+/* Ajustar el padding global para el contenido */
+.container {
+  padding-top: 70px; /* Valor correcto para eliminar la línea blanca */
+}
+
+/* Eliminamos este estilo conflictivo */
+/* .container {
+  padding-top: 120px;
+} */
+.container {
+  padding-top: 120px; /* Aumentado aún más para dar suficiente espacio al navbar */
+}

@@ -1,0 +1,38 @@
+<div class="dashboard-container">
+  <div class="row g-0">
+    <!-- Sidebar -->
+    <div class="col-auto">
+      <app-sidebar></app-sidebar>
+    </div>
+    
+    <!-- Contenido principal -->
+    <div class="col main-content">
+      <div class="container-fluid py-4">
+        <h1 class="mb-4">Reportes</h1>
+        
+        <div class="row mb-4">
+          <div class="col-md-6 mb-3">
+            <div class="card">
+              <div class="card-header">
+                <h5 class="card-title mb-0">Diezmos por Distrito</h5>
+              </div>
+              <div class="card-body">
+                <canvas #aportesPorDistritoChart></canvas>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6 mb-3">
+            <div class="card">
+              <div class="card-header">
+                <h5 class="card-title mb-0">Asociaciones que más aportaron el último mes</h5>
+              </div>
+              <div class="card-body">
+                <canvas #aportesPorAsociacionChart></canvas>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

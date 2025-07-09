@@ -1,0 +1,52 @@
+/* You can add global styles to this file, and also import other style files */
+:root {
+  --claro-red: #e63946;
+  --claro-dark: #1A202C;
+  --claro-light: #f8f9fa;
+  --claro-white: #ffffff;
+  --claro-text: #4A5568;
+  --claro-gray: #6c757d;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  color: var(--claro-text);
+}
+
+/* Botón personalizado */
+.btn-claro {
+  background-color: var(--claro-red);
+  color: white;
+  font-weight: bold;
+  border: none;
+}
+
+.btn-claro:hover {
+  background-color: #c43030;
+  color: white;
+}
+
+/* Hover rojo para enlaces */
+.hover-red:hover {
+  color: var(--claro-red) !important;
+  text-decoration: none;
+}
+
+/* Personalización de las transiciones de vista */
+::view-transition {
+  background: transparent;
+}
+
+::view-transition-group(root) {
+  animation: none;
+}
+
+::view-transition-old(root) {
+  opacity: 1;
+  animation: none;
+}
+
+::view-transition-new(root) {
+  opacity: 1;
+  animation: none;
+}

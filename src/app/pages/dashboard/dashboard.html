@@ -1,0 +1,149 @@
+<div class="dashboard-container">
+  <div class="row g-0">
+    <!-- Sidebar -->
+    <div class="col-auto">
+      <app-sidebar></app-sidebar>
+    </div>
+    
+    <!-- Contenido principal -->
+    <div class="col main-content">
+      <div class="container-fluid py-4">
+        <h1 class="mb-4">Dashboard</h1>
+        
+        <!-- Tarjetas de resumen -->
+        <div class="row mb-4">
+          <div class="col-md-3 mb-3">
+            <div class="card summary-card">
+              <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                  <div>
+                    <h6 class="card-subtitle mb-1 text-muted">Iglesias</h6>
+                    <h3 class="card-title mb-0">{{ totalIglesias }}</h3>
+                  </div>
+                  <div class="icon-container bg-primary">
+                    <i class="bi bi-building"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="col-md-3 mb-3">
+            <div class="card summary-card">
+              <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                  <div>
+                    <h6 class="card-subtitle mb-1 text-muted">Miembros</h6>
+                    <h3 class="card-title mb-0">{{ totalMiembros | number }}</h3>
+                  </div>
+                  <div class="icon-container bg-success">
+                    <i class="bi bi-people"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="col-md-3 mb-3">
+            <div class="card summary-card">
+              <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                  <div>
+                    <h6 class="card-subtitle mb-1 text-muted">Diezmos</h6>
+                    <h3 class="card-title mb-0">S/. {{ diezmosMes | number:'1.0-0' }}</h3>
+                  </div>
+                  <div class="icon-container bg-warning">
+                    <i class="bi bi-cash-stack"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="col-md-3 mb-3">
+            <div class="card summary-card">
+              <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                  <div>
+                    <h6 class="card-subtitle mb-1 text-muted">Ofrendas</h6>
+                    <h3 class="card-title mb-0">S/. {{ ofrendasMes | number:'1.0-0' }}</h3>
+                  </div>
+                  <div class="icon-container bg-danger">
+                    <i class="bi bi-gift"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Gráficos -->
+        <div class="row mb-4">
+          <div class="col-md-6 mb-3">
+            <div class="card">
+              <div class="card-header">
+                <h5 class="card-title mb-0">Diezmos por Mes</h5>
+              </div>
+              <div class="card-body">
+                <canvas id="diezmosChart"></canvas>
+              </div>
+            </div>
+          </div>
+          
+          <div class="col-md-6 mb-3">
+            <div class="card">
+              <div class="card-header">
+                <h5 class="card-title mb-0">Ofrendas por Mes</h5>
+              </div>
+              <div class="card-body">
+                <canvas id="ofrendasChart"></canvas>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Tabla de actividad reciente -->
+        <div class="row">
+          <div class="col-12">
+            <div class="card">
+              <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="card-title mb-0">Actividad Reciente</h5>             
+              </div>
+              <div class="card-body">
+                <div class="table-responsive">
+                  <table class="table table-hover">
+                    <thead>
+                      <tr>
+                        <th>Fecha</th>
+                        <th>Tipo</th>
+                        <th>Iglesia</th>
+                        <th>Monto</th>
+                        <th>Estado</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="let actividad of actividadReciente">
+                        <td>{{ formatearFecha(actividad.fecha) }}</td>
+                        <td>{{ actividad.tipo }}</td>
+                        <td>{{ actividad.iglesia }}</td>
+                        <td>S/. {{ actividad.monto | number:'1.2-2' }}</td>
+                        <td>
+                          <span class="badge" [ngClass]="actividad.estado === 'Completado' ? 'bg-success' : 'bg-warning'">
+                            {{ actividad.estado }}
+                          </span>
+                        </td>
+                      </tr>
+                      <tr *ngIf="actividadReciente.length === 0">
+                        <td colspan="5" class="text-center">No hay actividad reciente para mostrar</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,51 @@
+<div class="sidebar">
+  <div class="sidebar-header">
+    <img src="assets/img/logofin.png" alt="Logo" class="sidebar-logo">
+  </div>
+  
+  <ul class="sidebar-nav">
+    <li class="sidebar-item">
+      <a routerLink="/dashboard" routerLinkActive="active" class="sidebar-link">
+        <i class="bi bi-house"></i>
+        <span>Inicio</span>
+      </a>
+    </li>
+    <li class="sidebar-item">
+      <a routerLink="/asociaciones" routerLinkActive="active" class="sidebar-link">
+        <i class="bi bi-building"></i>
+        <span>Asociaciones y Misiones</span>
+      </a>
+    </li>
+    <li class="sidebar-item">
+      <a routerLink="/iglesias" routerLinkActive="active" class="sidebar-link">
+        <i class="bi bi-house-door"></i>
+        <span>Iglesias</span>
+      </a>
+    </li>
+    <li class="sidebar-item">
+      <a routerLink="/miembros" routerLinkActive="active" class="sidebar-link">
+        <i class="bi bi-people"></i>
+        <span>Miembros</span>
+      </a>
+    </li>
+    <li class="sidebar-item">
+      <a routerLink="/diezmos" routerLinkActive="active" class="sidebar-link">
+        <i class="bi bi-cash-coin"></i>
+        <span>Diezmos y Ofrendas</span>
+      </a>
+    </li>
+    <li class="sidebar-item">
+      <a routerLink="/reportes" routerLinkActive="active" class="sidebar-link">
+        <i class="bi bi-file-earmark-bar-graph"></i>
+        <span>Reportes</span>
+      </a>
+    </li>
+  </ul>
+  
+  <div class="sidebar-footer">
+    <a href="javascript:void(0)" (click)="logout()" class="sidebar-link">
+      <i class="bi bi-box-arrow-left"></i>
+      <span>Cerrar Sesión</span>
+    </a>
+  </div>
+</div>

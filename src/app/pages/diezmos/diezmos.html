@@ -1,0 +1,277 @@
+<div class="dashboard-container">
+  <div class="row g-0">
+    <!-- Sidebar -->
+    <div class="col-auto">
+      <app-sidebar></app-sidebar>
+    </div>
+    
+    <!-- Contenido principal -->
+    <div class="col main-content">
+      <div class="container-fluid py-4">
+        <h1 class="mb-4">Diezmos y Ofrendas</h1>
+        
+        <div class="row mb-4">
+          <div class="col-md-12">
+            <div class="card">
+              <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="card-title mb-0">Registro de Diezmos</h5>
+                <button class="btn btn-primary btn-sm" (click)="openAddModalDiezmo()">Registrar Nuevo</button>
+              </div>
+              <div class="card-body">
+                <div class="table-responsive">
+                  <table class="table table-hover">
+                    <thead>
+                      <tr>
+                        <th>ID</th>
+                        <th>Fecha</th>
+                        <th>Miembro</th>
+                        <th>Iglesia</th>
+                        <th>Monto</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngIf="cargandoDiezmos">
+                        <td colspan="7" class="text-center">
+                          <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Cargando...</span>
+                          </div>
+                        </td>
+                      </tr>
+                      <tr *ngIf="!cargandoDiezmos && diezmos.length === 0">
+                        <td colspan="7" class="text-center">No hay diezmos registrados</td>
+                      </tr>
+                      <tr *ngFor="let diezmo of diezmos; let i = index">
+                        <td>{{ diezmo.id }}</td>
+                        <td>{{ diezmo.fecha }}</td>
+                        <td>{{ diezmo.miembro }}</td>
+                        <td>{{ diezmo.iglesia }}</td>
+                        <td>S/. {{ diezmo.monto | number:'1.2-2' }}</td>
+                        <td>
+                          <span class="badge" [ngClass]="diezmo.procesado ? 'bg-success' : 'bg-warning'">
+                            {{ diezmo.procesado ? 'Procesado' : 'Pendiente' }}
+                          </span>
+                        </td>
+                        <td>
+                          <button class="btn btn-sm btn-outline-primary me-1" (click)="openEditModalDiezmo(diezmo, i)">Editar</button>
+                          <button class="btn btn-sm btn-outline-danger" (click)="deleteDiezmo(i)">Eliminar</button>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+                
+                <!-- Controles de paginación para diezmos (MOVIDO AQUÍ) -->
+                <!-- Reemplaza la sección de paginación de diezmos con esto: -->
+                <div class="d-flex justify-content-between align-items-center mt-3" *ngIf="!cargandoDiezmos && diezmos.length > 0">
+                  <div>
+                    <span>{{ paginaActualDiezmos }}</span>
+                  </div>
+                  <nav>
+                    <ul class="pagination">
+                      <li class="page-item" [class.disabled]="disabledAnteriorDiezmos">
+                        <a class="page-link" (click)="cambiarPaginaDiezmos(paginaDiezmos - 1)" aria-label="Anterior">
+                          <span aria-hidden="true">&laquo;</span>
+                        </a>
+                      </li>
+                      <li class="page-item" *ngFor="let i of paginasDiezmos" [class.active]="paginaDiezmos === i">
+                        <a class="page-link" (click)="cambiarPaginaDiezmos(i)">{{ i }}</a>
+                      </li>
+                      <li class="page-item" [class.disabled]="disabledSiguienteDiezmos">
+                        <a class="page-link" (click)="cambiarPaginaDiezmos(paginaDiezmos + 1)" aria-label="Siguiente">
+                          <span aria-hidden="true">&raquo;</span>
+                        </a>
+                      </li>
+                    </ul>
+                  </nav>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="row mb-4">
+          <div class="col-md-12">
+            <div class="card">
+              <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="card-title mb-0">Registro de Ofrendas</h5>
+                <div>
+                  <button class="btn btn-primary btn-sm me-2" (click)="openAddModalOfrenda()">Registrar Nueva</button>
+                </div>
+              </div>
+              <div class="card-body">
+                <div class="table-responsive">
+                  <table class="table table-hover">
+                    <thead>
+                      <tr>
+                        <th>ID</th>
+                        <th>Fecha</th>
+                        <th>Iglesia</th>
+                        <th>Descripción</th>
+                        <th>Monto</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngIf="cargandoOfrendas">
+                        <td colspan="7" class="text-center">
+                          <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Cargando...</span>
+                          </div>
+                        </td>
+                      </tr>
+                      <tr *ngIf="!cargandoOfrendas && ofrendas.length === 0">
+                        <td colspan="7" class="text-center">No hay ofrendas registradas</td>
+                      </tr>
+                      <tr *ngFor="let ofrenda of ofrendas; let i = index">
+                        <td>{{ ofrenda.id }}</td>
+                        <td>{{ ofrenda.fecha }}</td>
+                        <td>{{ ofrenda.iglesia }}</td>
+                        <td>{{ ofrenda.descripcion }}</td>
+                        <td>S/. {{ ofrenda.monto | number:'1.2-2' }}</td>
+                        <td>
+                          <span class="badge" [ngClass]="ofrenda.procesado ? 'bg-success' : 'bg-warning'">
+                            {{ ofrenda.procesado ? 'Procesado' : 'Pendiente' }}
+                          </span>
+                        </td>
+                        <td>
+                          <button class="btn btn-sm btn-outline-primary me-1" (click)="openEditModalOfrenda(ofrenda, i)">Editar</button>
+                          <button class="btn btn-sm btn-outline-danger" (click)="deleteOfrenda(i)">Eliminar</button>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+                
+                <!-- Controles de paginación para ofrendas -->
+                <!-- Reemplaza la sección de paginación de ofrendas con esto: -->
+                <div class="d-flex justify-content-between align-items-center mt-3" *ngIf="!cargandoOfrendas && ofrendas.length > 0">
+                  <div>
+                    <span>{{ paginaActualOfrendas }}</span>
+                  </div>
+                  <nav>
+                    <ul class="pagination">
+                      <li class="page-item" [class.disabled]="disabledAnteriorOfrendas">
+                        <a class="page-link" (click)="cambiarPaginaOfrendas(paginaOfrendas - 1)" aria-label="Anterior">
+                          <span aria-hidden="true">&laquo;</span>
+                        </a>
+                      </li>
+                      <li class="page-item" *ngFor="let i of paginasOfrendas" [class.active]="paginaOfrendas === i">
+                        <a class="page-link" (click)="cambiarPaginaOfrendas(i)">{{ i }}</a>
+                      </li>
+                      <li class="page-item" [class.disabled]="disabledSiguienteOfrendas">
+                        <a class="page-link" (click)="cambiarPaginaOfrendas(paginaOfrendas + 1)" aria-label="Siguiente">
+                          <span aria-hidden="true">&raquo;</span>
+                        </a>
+                      </li>
+                    </ul>
+                  </nav>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="card">
+          <div class="card-header">
+            <h5 class="card-title mb-0">Proceso de Recolección</h5>
+          </div>
+          <div class="card-body">
+            <div class="row">
+              <div class="col-md-6">
+                <h6>Proceso de Diezmos y Ofrendas:</h6>
+                <ol class="process-list">
+                  <li>Se recoge cada semana que hay servicio en las iglesias (2 veces por semana).</li>
+                  <li>El encargado de recoger y contar el total de diezmos y ofrendas es el diácono de cada iglesia.</li>
+                  <li>El responsable de llevar la contabilidad de los diezmos y ofrendas es el tesorero de cada iglesia.</li>
+                  <li>Los diezmos son enviados a la asociación o misión (en el caso de Lima este y Lima Norte pertenecen a una asociación y las demás sedes pertenecen a una misión).</li>
+                  <li>El diezmo es el 10% del ingreso económico de cada miembro de iglesia y es llevado íntegramente a la asociación o misión.</li>
+                </ol>
+              </div>
+              <div class="col-md-6">
+                <h6>Distribución de Ofrendas:</h6>
+                <ol class="process-list" start="6">
+                  <li>El total de las ofrendas el 60% queda en la iglesia para compras internas (flores, pagar los servicios, etc.) y el 40% se va a la asociación o misión.</li>
+                  <li>El Pastor de cada distrito (en total son 230) es el responsable de motivar que todos diezmen en cada iglesia.</li>
+                  <li>Los pastores tienen un sueldo aproximado de 4000 mil soles, y cada 2-3 años son cambiados de distrito.</li>
+                </ol>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Modal para Agregar/Editar Diezmo -->
+<div class="modal fade show" tabindex="-1" [ngStyle]="{display: showModalDiezmo ? 'block' : 'none', background: 'rgba(0,0,0,0.5)'}" *ngIf="showModalDiezmo">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">{{ editModeDiezmo ? 'Editar Diezmo' : 'Registrar Diezmo' }}</h5>
+        <button type="button" class="btn-close" (click)="closeModalDiezmo()"></button>
+      </div>
+      <div class="modal-body">
+        <form #diezmoForm="ngForm">
+          <div class="mb-3">
+            <label class="form-label">Fecha</label>
+            <input class="form-control" [(ngModel)]="modalDiezmo.fecha" name="fecha" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Miembro</label>
+            <input class="form-control" [(ngModel)]="modalDiezmo.miembro" name="miembro" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Iglesia</label>
+            <input class="form-control" [(ngModel)]="modalDiezmo.iglesia" name="iglesia" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Monto</label>
+            <input type="number" class="form-control" [(ngModel)]="modalDiezmo.monto" name="monto" required>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" (click)="closeModalDiezmo()">Cancelar</button>
+        <button class="btn btn-primary" (click)="saveDiezmo()">{{ editModeDiezmo ? 'Guardar Cambios' : 'Registrar' }}</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Modal para Agregar/Editar Ofrenda -->
+<div class="modal fade show" tabindex="-1" [ngStyle]="{display: showModalOfrenda ? 'block' : 'none', background: 'rgba(0,0,0,0.5)'}" *ngIf="showModalOfrenda">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">{{ editModeOfrenda ? 'Editar Ofrenda' : 'Registrar Ofrenda' }}</h5>
+        <button type="button" class="btn-close" (click)="closeModalOfrenda()"></button>
+      </div>
+      <div class="modal-body">
+        <form #ofrendaForm="ngForm">
+          <div class="mb-3">
+            <label class="form-label">Fecha</label>
+            <input class="form-control" [(ngModel)]="modalOfrenda.fecha" name="fecha" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Iglesia</label>
+            <input class="form-control" [(ngModel)]="modalOfrenda.iglesia" name="iglesia" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Descripción</label>
+            <input class="form-control" [(ngModel)]="modalOfrenda.descripcion" name="descripcion">
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Monto</label>
+            <input type="number" class="form-control" [(ngModel)]="modalOfrenda.monto" name="monto" required>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" (click)="closeModalOfrenda()">Cancelar</button>
+        <button class="btn btn-primary" (click)="saveOfrenda()">{{ editModeOfrenda ? 'Guardar Cambios' : 'Registrar' }}</button>
+      </div>
+    </div>
+  </div>
+</div>

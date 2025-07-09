@@ -1,0 +1,142 @@
+<div class="dashboard-container">
+  <div class="row g-0">
+    <!-- Sidebar -->
+    <div class="col-auto">
+      <app-sidebar></app-sidebar>
+    </div>
+    
+    <!-- Contenido principal -->
+    <div class="col main-content">
+      <div class="container-fluid py-4">
+        <h1 class="mb-4">Asociaciones</h1>
+        
+        <!-- Tarjetas de resumen -->
+        <div class="row mb-4">
+          <div class="col-md-6 mb-3">
+            <div class="card summary-card">
+              <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                  <div>
+                    <h6 class="card-subtitle mb-1 text-muted">Asociaciones</h6>
+                    <h3 class="card-title mb-0">{{ asociaciones.length }}</h3>
+                  </div>
+                  <div class="icon-container bg-primary">
+                    <i class="bi bi-building"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="col-md-6 mb-3">
+            <div class="card summary-card">
+              <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                  <div>
+                    <h6 class="card-subtitle mb-1 text-muted">Total de Iglesias</h6>
+                    <h3 class="card-title mb-0">{{ totalIglesias }}</h3>
+                  </div>
+                  <div class="icon-container bg-warning">
+                    <i class="bi bi-house-door"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="row mb-4">
+          <div class="col-md-12 mb-3">
+            <div class="card summary-card">
+              <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                  <div>
+                    <h6 class="card-subtitle mb-1 text-muted">Total de Miembros</h6>
+                    <h3 class="card-title mb-0">{{ totalMiembros | number }}</h3>
+                  </div>
+                  <div class="icon-container bg-danger">
+                    <i class="bi bi-people"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="card">
+          <div class="card-header d-flex justify-content-between align-items-center">
+            <h5 class="card-title mb-0">Lista de Asociaciones</h5>
+            <button class="btn btn-primary btn-sm" (click)="openAddModal()">Agregar</button>
+          </div>
+          <div class="card-body">
+            <div class="table-responsive">
+              <table class="table table-hover">
+                <thead>
+                  <tr>
+                    <th>N°</th>
+                    <th>Asociaciones</th>
+                    <th>Cant. De Iglesias</th>
+                    <th>Cant. De Miembros</th>
+                    <th>Diezmo mensual</th>
+                    <th>Ofrenda mensual</th>
+                    <th>Acciones</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let asociacion of asociaciones; let i = index">
+                    <td>{{ i + 1 }}</td>
+                    <td>{{ asociacion.nombre }}</td>
+                    <td>{{ getIglesiasCount(asociacion) }}</td>
+                    <td>{{ getMiembrosCount(asociacion) | number }}</td>
+                    <td>{{ getDiezmoMensual(asociacion) | currency:'S/':'symbol':'1.0-0' }}</td>
+                    <td>{{ getOfrendaMensual(asociacion) | currency:'S/':'symbol':'1.0-0' }}</td>
+                    <td>
+                      <button class="btn btn-sm btn-outline-primary me-1" (click)="openEditModal(asociacion, i)">Editar</button>
+                      <button class="btn btn-sm btn-outline-danger" (click)="deleteAsociacion(i)">Eliminar</button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal para Agregar/Editar Asociación -->
+<div class="modal fade show" tabindex="-1" [ngStyle]="{display: showModal ? 'block' : 'none', background: 'rgba(0,0,0,0.5)'}" *ngIf="showModal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">{{ editMode ? 'Editar Asociación' : 'Agregar Asociación' }}</h5>
+        <button type="button" class="btn-close" (click)="closeModal()"></button>
+      </div>
+      <div class="modal-body">
+        <form #asociacionForm="ngForm">
+          <div class="mb-3">
+            <label class="form-label">Nombre</label>
+            <input class="form-control" [(ngModel)]="modalAsociacion.nombre" name="nombre" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Distritos (separados por coma)</label>
+            <input class="form-control" [(ngModel)]="modalAsociacion.distritos" name="distritos">
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Diezmo mensual</label>
+            <input type="number" class="form-control" [(ngModel)]="modalAsociacion.diezmoMensual" name="diezmoMensual">
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Ofrenda mensual</label>
+            <input type="number" class="form-control" [(ngModel)]="modalAsociacion.ofrendaMensual" name="ofrendaMensual">
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" (click)="closeModal()">Cancelar</button>
+        <button class="btn btn-primary" (click)="saveAsociacion()">{{ editMode ? 'Guardar Cambios' : 'Agregar' }}</button>
+      </div>
+    </div>
+  </div>
+</div>
